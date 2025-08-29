@@ -7,7 +7,7 @@ public class Cliente
             {
                 try (Socket socket = new Socket("localhost", 8080)) //Conecta no servidor rodando na mesma máquina (localhost) e na porta 8080
                     {
-                        System.out.println("Conexão estabelecida com o servidor.");
+                        MenuLogin.login();
                     }
                 catch (IOException e)
                     {
