@@ -10,6 +10,7 @@ O objetivo principal é facilitar o descarte adequado de resíduos sólidos, con
 - Visualizar informações formatadas sobre cada ponto  
 
 🔑 Administrador
+Login com credenciais exclusivas (usuário: admin, senha: acesso741!)
 - Acessar painel de administração  
 - Cadastrar novos pontos de coleta  
 - Atualizar ou remover pontos existentes  
