@@ -148,12 +148,12 @@ public class PainelAdmin
                                                     if (resposta.equals("success")) //caso o servidor responda "success"
                                                         {
                                                             JOptionPane.showMessageDialog(listarPontos, "Ponto Alterado"); //é mostrada a mensagem "Ponto Alterado"
-                                                            listarPontos.setVisible(true);
+                                                            frame.setVisible(true);
                                                         }
                                                     else //caso não
                                                         {
                                                             JOptionPane.showMessageDialog(listarPontos,"Erro: Não foi possível editar o ponto!"); //é mostrada a mensagem "Erro: Não foi possível editar o ponto!"
-                                                            listarPontos.setVisible(true);
+                                                            frame.setVisible(true);
                                                         }
                                                 }
                                         catch (IOException ex)
@@ -166,6 +166,138 @@ public class PainelAdmin
                                     pontoPanel.add(pontoDeRef);
                                     pontoPanel.add(Box.createRigidArea(new Dimension(0, 5)));
                                     pontoPanel.add(editar);
+                                    pontoPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+
+                                    painelSecundario.add(pontoPanel);
+                                    painelSecundario.add(Box.createRigidArea(new Dimension(0, 10)));
+                                }
+
+                            JScrollPane scroll = new JScrollPane(painelSecundario);
+                            scroll.setBorder(BorderFactory.createEmptyBorder());
+                            painelPrincipal.add(scroll, BorderLayout.CENTER);
+
+                            // Botão caso o usuário queira sair da tela sem editar nenhum ponto
+                            JButton cancelarEdicao = new JButton("Fechar");
+                            cancelarEdicao.setBackground(new Color(200, 120, 120));
+                            cancelarEdicao.setForeground(Color.BLACK);
+                            cancelarEdicao.setFocusPainted(false);
+                            cancelarEdicao.setFont(new Font("Segoe UI", Font.BOLD, 14));
+                            cancelarEdicao.setPreferredSize(new Dimension(100, 35));
+                            cancelarEdicao.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+                            cancelarEdicao.addActionListener(e3 -> {
+                                listarPontos.dispose();
+                                frame.setVisible(true);
+                            });
+
+                            JPanel painelBotao = new JPanel();
+                            painelBotao.setBackground(new Color(245, 255, 245));
+                            painelBotao.add(cancelarEdicao);
+                            painelPrincipal.add(painelBotao, BorderLayout.SOUTH);
+
+                            listarPontos.setContentPane(painelPrincipal);
+                            listarPontos.setVisible(true);
+                        }
+                    else
+                        {
+                            frame.setVisible(true);
+                        }
+                });
+
+                // Botão Excluir Ponto
+                JButton excluirPonto = new JButton("Excluir Ponto de Coleta");
+                excluirPonto.setBackground(new Color(120, 200, 120));
+                excluirPonto.setForeground(Color.BLACK);
+                excluirPonto.setFocusPainted(false);
+                excluirPonto.setFont(new Font("Segoe UI", Font.BOLD, 16));
+                excluirPonto.setAlignmentX(Component.CENTER_ALIGNMENT);
+                excluirPonto.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                excluirPonto.setMaximumSize(new Dimension(250, 40));
+                panel.add(excluirPonto);
+                panel.add(Box.createRigidArea(new Dimension(0, 15)));
+
+                excluirPonto.addActionListener(e -> {
+                    frame.dispose();
+                    ArrayList<PontoDeColeta> pontos = PontoDeColeta.listarPontos(); //carrega pontos armazenados no servidor usando metodo "listarPontos"
+
+                    if  (!pontos.isEmpty()) //verifíca se a lista de pontos está vazia
+                        {
+                            //JFrame usado para mostrar opções de pontos
+                            JFrame listarPontos = new JFrame("Lista de Pontos");
+                            listarPontos.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                            listarPontos.setSize(500, 450);
+                            listarPontos.setLocationRelativeTo(null);
+
+                            JPanel painelPrincipal = new JPanel(new BorderLayout());
+
+                            JPanel painelSecundario = new JPanel();
+                            painelSecundario.setLayout(new BoxLayout(painelSecundario, BoxLayout.Y_AXIS));
+                            painelSecundario.setBackground(new Color(245, 255, 245));
+
+                            JLabel tituloLista = new JLabel("Lista de Pontos");
+                            tituloLista.setFont(new Font("Segoe UI", Font.BOLD, 24));
+                            tituloLista.setForeground(new Color(0, 100, 0));
+                            tituloLista.setAlignmentX(Component.CENTER_ALIGNMENT);
+                            painelSecundario.add(Box.createRigidArea(new Dimension(0, 20)));
+                            painelSecundario.add(tituloLista);
+                            painelSecundario.add(Box.createRigidArea(new Dimension(0, 15)));
+
+                            for (PontoDeColeta ponto : pontos) //percorre lista de pontos
+                                {
+                                    JPanel pontoPanel = new JPanel();
+                                    pontoPanel.setLayout(new BoxLayout(pontoPanel, BoxLayout.Y_AXIS));
+                                    pontoPanel.setBackground(new Color(245, 255, 245));
+                                    pontoPanel.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1));
+                                    pontoPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+                                    //cria um texto para cada ponto com seu ponto de referência
+                                    JLabel pontoDeRef = new JLabel(ponto.pontoDeRef);
+                                    pontoDeRef.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+                                    pontoDeRef.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+                                    //cria um botão para cada ponto com a função de exclui-lô
+                                    JButton excluir = new JButton("Excluir Ponto");
+                                    excluir.setPreferredSize(new Dimension(100, 30));
+                                    excluir.setAlignmentX(Component.CENTER_ALIGNMENT);
+                                    excluir.setBackground(new Color(120, 200, 120));
+                                    excluir.setForeground(Color.BLACK);
+                                    excluir.setFocusPainted(false);
+                                    excluir.setFont(new Font("Segoe UI", Font.BOLD, 12));
+                                    excluir.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+                                    excluir.addActionListener(e1 -> {
+                                        try (Socket socket = new Socket("localhost", 8080);
+                                             BufferedReader entrada = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                                             PrintWriter saida = new PrintWriter(socket.getOutputStream(), true)
+                                            )
+                                                {
+                                                    saida.println("excluir" + ponto); //envia a requisição ao servidor para excluir o ponto (formato: "excluirponto")
+                                                    String resposta = entrada.readLine();
+
+                                                    if (resposta.equals("success")) //caso o servidor responda "success"
+                                                        {
+                                                            JOptionPane.showMessageDialog(listarPontos, "Ponto Excluido");
+
+                                                            // remove visualmente o painel do ponto
+                                                            painelSecundario.remove(pontoPanel);
+                                                            painelSecundario.revalidate();
+                                                            painelSecundario.repaint();
+                                                        }
+                                                    else //caso não
+                                                        {
+                                                            JOptionPane.showMessageDialog(listarPontos, "Erro: Não foi possível excluir o ponto!");
+                                                        }
+                                                }
+                                        catch (IOException ex)
+                                                {
+                                                    JOptionPane.showMessageDialog(listarPontos, "Erro ao conectar com o servidor!", "Erro", JOptionPane.ERROR_MESSAGE);
+                                                }
+                                    });
+
+                                    pontoPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+                                    pontoPanel.add(pontoDeRef);
+                                    pontoPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+                                    pontoPanel.add(excluir);
                                     pontoPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
                                     painelSecundario.add(pontoPanel);

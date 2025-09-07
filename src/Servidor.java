@@ -80,6 +80,20 @@ public class Servidor
                                             }
     
                                     }
+                                else if(requisicao.startsWith("excluir")) //verifica se a requisição recebida começa com "excluir"
+                                    {
+                                        String dados = requisicao.substring("excluir".length()).trim(); //retira "excluir" do começo da requisição, ficando somente o ponto
+
+                                        for (int i = 0; i < pontos.size(); i++) //percorre lista
+                                            {
+                                                if  (pontos.get(i).toString().equals(dados))
+                                                    {
+                                                        pontos.remove(i); // remove o ponto
+                                                        saida.println("success");
+                                                        break; // encerra o loop após remover
+                                                    }
+                                            }
+                                    }
                             }
                     }
                 catch(IOException e) //trata possíveis erros de entrada/saída ao subir o servidor
