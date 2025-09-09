@@ -13,7 +13,7 @@ public class PainelUser
                     }
                 catch (Exception e)
                     {
-                        JOptionPane.showMessageDialog(null,"Erro: Não foi possível trocar o visual padrão do swing.");
+                        JOptionPane.showMessageDialog(null, "Erro: Não foi possível trocar o visual padrão do swing.");
                     }
 
                 // Janela principal
@@ -48,8 +48,8 @@ public class PainelUser
 
                 // Botão Listar Pontos
                 JButton listar = new JButton("Listar Pontos de Coleta");
-                listar.setBackground(new Color(120, 200, 120));
-                listar.setForeground(Color.BLACK);
+                listar.setBackground(new Color(200, 255, 200));
+                listar.setForeground(new Color(0, 100, 0));
                 listar.setFocusPainted(false);
                 listar.setFont(new Font("Segoe UI", Font.BOLD, 16));
                 listar.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -60,8 +60,8 @@ public class PainelUser
 
                 // Botão Encerrar Programa
                 JButton encerrarProg = new JButton("Encerrar Programa");
-                encerrarProg.setBackground(new Color(200, 120, 120));
-                encerrarProg.setForeground(Color.BLACK);
+                encerrarProg.setBackground(new Color(200, 255, 200));
+                encerrarProg.setForeground(new Color(0, 100, 0));
                 encerrarProg.setFocusPainted(false);
                 encerrarProg.setFont(new Font("Segoe UI", Font.BOLD, 16));
                 encerrarProg.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -70,51 +70,65 @@ public class PainelUser
                 panelMain.add(encerrarProg);
 
                 // Ação do botão Encerrar
-                encerrarProg.addActionListener(e -> System.exit(0));
+                encerrarProg.addActionListener(e -> {
+                    System.exit(0);
+                });
 
                 // Ação do botão Listar Pontos
                 listar.addActionListener(e -> {
-                    frame.dispose();
-                    ArrayList<PontoDeColeta> pontos = PontoDeColeta.listarPontos(); //carrega pontos armazenados no servidor usando metodo "listarPontos"
+                    ArrayList<PontoDeColeta> pontos = PontoDeColeta.listarPontos();
 
-                    // Janela da lista
-                    JFrame listarPontos = new JFrame("Lista de Pontos");
-                    listarPontos.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    listarPontos.setSize(500, 450);
-                    listarPontos.setLocationRelativeTo(null);
+                    if(pontos.equals(null))
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        frame.dispose();
 
-                    JPanel painelPrincipal = new JPanel(new BorderLayout());
+                        // Janela da lista
+                        JFrame listarPontos = new JFrame("Lista de Pontos");
+                        listarPontos.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        listarPontos.setSize(500, 450);
+                        listarPontos.setLocationRelativeTo(null);
 
-                    // Painel de lista
-                    JPanel panel = new JPanel();
-                    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-                    panel.setBackground(new Color(245, 255, 245));
+                        JPanel painelPrincipal = new JPanel(new BorderLayout());
 
-                    // Título da lista
-                    JLabel tituloLista = new JLabel("Pontos de Coleta");
-                    tituloLista.setFont(new Font("Segoe UI", Font.BOLD, 24));
-                    tituloLista.setForeground(new Color(0, 100, 0));
-                    tituloLista.setAlignmentX(Component.CENTER_ALIGNMENT);
+                        // Painel de lista
+                        JPanel panel = new JPanel();
+                        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+                        panel.setBackground(new Color(245, 255, 245));
 
-                    panel.add(Box.createRigidArea(new Dimension(0, 20)));
-                    panel.add(tituloLista);
-                    panel.add(Box.createRigidArea(new Dimension(0, 15)));
+                        // Título da lista
+                        JLabel tituloLista = new JLabel("Pontos de Coleta");
+                        tituloLista.setFont(new Font("Segoe UI", Font.BOLD, 24));
+                        tituloLista.setForeground(new Color(0, 100, 0));
+                        tituloLista.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-                    // Adiciona cada ponto com botão de detalhes
-                    for (PontoDeColeta ponto : pontos) //percorre lista de pontos
-                        {
+                        panel.add(Box.createRigidArea(new Dimension(0, 20)));
+                        panel.add(tituloLista);
+                        panel.add(Box.createRigidArea(new Dimension(0, 15)));
+
+                        // Adiciona cada ponto com botão de detalhes
+                        for (PontoDeColeta ponto : pontos) {
                             JPanel pontoPanel = new JPanel();
                             pontoPanel.setLayout(new BoxLayout(pontoPanel, BoxLayout.Y_AXIS));
                             pontoPanel.setBackground(new Color(245, 255, 245));
                             pontoPanel.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1));
                             pontoPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-                            //cria um texto para cada ponto com seu ponto de referência
+                            // Mostra ponto de referência
                             JLabel lblPonto = new JLabel(ponto.pontoDeRef);
                             lblPonto.setFont(new Font("Segoe UI", Font.PLAIN, 14));
                             lblPonto.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-                            //cria um botão para cada ponto com a função de ver detalhes
+                            // mostra os materiais aceitos já na listagem
+                            JLabel lblMateriais = new JLabel("Materiais: " + String.join(", ", ponto.materiaisAceitos));
+                            lblMateriais.setFont(new Font("Segoe UI", Font.ITALIC, 12));
+                            lblMateriais.setForeground(new Color(80, 80, 80));
+                            lblMateriais.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+                            // Botão Ver Ponto
                             JButton verPonto = new JButton("Ver Ponto");
                             verPonto.setPreferredSize(new Dimension(100, 30));
                             verPonto.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -124,6 +138,7 @@ public class PainelUser
                             verPonto.setFont(new Font("Segoe UI", Font.BOLD, 12));
                             verPonto.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
+
                             verPonto.addActionListener(e1 -> {
                                 String detalhes = "Rua: " + ponto.rua + "\n"
                                         + "Número: " + ponto.numero + "\n"
@@ -131,12 +146,14 @@ public class PainelUser
                                         + "Bairro: " + ponto.bairro + "\n"
                                         + "Cidade: " + ponto.cidade + "\n"
                                         + "UF: " + ponto.uF + "\n"
-                                        + "CEP: " + ponto.cEP;
+                                        + "CEP: " + ponto.cEP + "\n"
+                                        + "Materiais Aceitos: " + String.join(", ", ponto.materiaisAceitos);
                                 JOptionPane.showMessageDialog(listarPontos, detalhes, "Detalhes do Ponto", JOptionPane.INFORMATION_MESSAGE);
                             });
 
                             pontoPanel.add(Box.createRigidArea(new Dimension(0, 10)));
                             pontoPanel.add(lblPonto);
+                            pontoPanel.add(lblMateriais);
                             pontoPanel.add(Box.createRigidArea(new Dimension(0, 5)));
                             pontoPanel.add(verPonto);
                             pontoPanel.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -144,41 +161,42 @@ public class PainelUser
                             panel.add(Box.createRigidArea(new Dimension(0, 10)));
                         }
 
-                    JScrollPane scroll = new JScrollPane(panel);
-                    scroll.setBorder(BorderFactory.createEmptyBorder());
-                    painelPrincipal.add(scroll, BorderLayout.CENTER);
+                        JScrollPane scroll = new JScrollPane(panel);
+                        scroll.setBorder(BorderFactory.createEmptyBorder());
+                        painelPrincipal.add(scroll, BorderLayout.CENTER);
 
-                    // Botão Fechar no rodapé
-                    JButton fechar = new JButton("Fechar");
-                    fechar.setBackground(new Color(200, 120, 120));
-                    fechar.setForeground(Color.BLACK);
-                    fechar.setFocusPainted(false);
-                    fechar.setFont(new Font("Segoe UI", Font.BOLD, 14));
-                    fechar.setPreferredSize(new Dimension(100, 35));
-                    fechar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                        // Botão Fechar no rodapé
+                        JButton fechar = new JButton("Fechar");
+                        fechar.setBackground(new Color(200, 120, 120));
+                        fechar.setForeground(Color.BLACK);
+                        fechar.setFocusPainted(false);
+                        fechar.setFont(new Font("Segoe UI", Font.BOLD, 14));
+                        fechar.setPreferredSize(new Dimension(100, 35));
+                        fechar.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-                    fechar.addActionListener(e2 -> {
-                        listarPontos.dispose();
-                        frame.setVisible(true);
-                    });
+                        fechar.addActionListener(e2 -> {
+                            listarPontos.dispose();
+                            frame.setVisible(true);
+                        });
 
-                    JPanel painelRodape = new JPanel();
-                    painelRodape.setBackground(new Color(245, 255, 245));
-                    painelRodape.add(fechar);
-                    painelPrincipal.add(painelRodape, BorderLayout.SOUTH);
+                        JPanel painelRodape = new JPanel();
+                        painelRodape.setBackground(new Color(245, 255, 245));
+                        painelRodape.add(fechar);
+                        painelPrincipal.add(painelRodape, BorderLayout.SOUTH);
 
-                    listarPontos.setContentPane(painelPrincipal);
-                    if(!pontos.isEmpty())
-                        {
+                        listarPontos.setContentPane(painelPrincipal);
+
+                        if (!pontos.isEmpty()) {
+                            frame.setVisible(true);
                             listarPontos.setVisible(true);
-                        }
-                    else
-                        {
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Erro: Lista Vazia.");
                             frame.setVisible(true);
                         }
+                    }
                 });
 
-                frame.setContentPane(panelMain);
-                frame.setVisible(true);
+                        frame.setContentPane(panelMain);
+                        frame.setVisible(true);
             }
     }
