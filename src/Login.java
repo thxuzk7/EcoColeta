@@ -103,7 +103,7 @@ public class Login
                 btnCancelar.addActionListener(event -> {
                     // Fecha a tela de login e reexibe o menu principal.
                     frame.dispose();
-                    Menu.frame.setVisible(true);
+                    Menu.menuInicial();
                 });
 
                 frame.add(panel);

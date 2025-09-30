@@ -6,46 +6,50 @@ import java.util.ArrayList;
 
 public class PainelAdmin
     {
-        public static void requisicoesAdmin() //Inicializa e exibe o painel principal do administrador.
+        public static void requisicoesAdmin()
             {
-                JFrame frame = ConfUI.criarFrame("Painel Administrativo",450, 350);
+                JFrame frame = ConfUI.criarFrame("Painel Administrativo", 450, 380);
 
-                JLabel titulo = ConfUI.criarTitulo("Painel Administrativo",25);
+                // Painel principal com BorderLayout
+                JPanel panelMain = new JPanel(new BorderLayout());
+                panelMain.setBackground(new Color(245, 255, 245));
 
-                // Criação dos botões de ação administrativa.
+                // Painel central (botões principais)
+                JPanel panelCentro = new JPanel();
+                panelCentro.setBackground(new Color(245, 255, 245));
+                panelCentro.setLayout(new BoxLayout(panelCentro, BoxLayout.Y_AXIS));
+
+                // Cria Titulo
+                JLabel titulo = ConfUI.criarTitulo("Painel Administrativo", 25);
+
+                // Cria Botões principais
                 JButton listar = ConfUI.criarBotao("Listar Pontos de Coleta", 250, 40);
-                JButton adicionar = ConfUI.criarBotao("Adicionar Ponto de Coleta",250, 40);
-                JButton editar = ConfUI.criarBotao("Editar Ponto de Coleta",250, 40);
-                JButton excluir = ConfUI.criarBotao("Excluir Ponto de Coleta",250, 40);
-                JButton encerrar = ConfUI.criarBotao("Encerrar Programa",250, 40);
+                JButton adicionar = ConfUI.criarBotao("Adicionar Ponto de Coleta", 250, 40);
+                JButton editar = ConfUI.criarBotao("Editar Ponto de Coleta", 250, 40);
+                JButton excluir = ConfUI.criarBotao("Excluir Ponto de Coleta", 250, 40);
 
-                // Lister para listar Pontos.
-                listar.addActionListener(e -> {
-                    frame.dispose(); // Fecha a tela de menu do Administrador.
-                    PontoDeColeta.exibirlista(frame);
-                });
+                // Cria Botões Deslogar e Encerrar (menor e fixo no rodapé)
+                JButton deslogar = ConfUI.criarBotao("Deslogar", 100, 30);
+                JButton encerrar = ConfUI.criarBotao("Encerrar Programa", 100, 30);
 
-                // Listener para Adicionar Ponto.
+                // Listeners principais
+                listar.addActionListener(e -> PontoDeColeta.exibirlista(frame));
+
                 adicionar.addActionListener(e -> {
-                    frame.dispose(); // Fecha a tela de menu do admin.
+                    frame.dispose();
                     PontoDeColeta ponto = PontoDeColeta.pedirDadosDePonto();
 
-                    // Verifica se o ponto foi criado.
-                    if (ponto != null)
+                    if  (ponto != null)
                         {
-                            // Comunicação com o servidor para adicionar.
                             try (Socket socket = new Socket("localhost", 8080);
                                  BufferedReader entrada = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                                  PrintWriter saida = new PrintWriter(socket.getOutputStream(), true)
                                 )
                                     {
-                                        // Envia a requisição: "adicionar " + ponto serializado (usando toString()).
-                                        saida.println("adicionar " + ponto.toString());
 
-                                        // Leitura da Resposta do Servidor.
+                                        saida.println("adicionar " + ponto.toString());
                                         String resposta = entrada.readLine();
 
-                                        // Tratamento e Confirmação da Resposta.
                                         if ("success".equals(resposta))
                                             {
                                                 JOptionPane.showMessageDialog(frame, "Ponto adicionado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
@@ -57,56 +61,61 @@ public class PainelAdmin
                                                 PainelAdmin.requisicoesAdmin();
                                             }
                                     }
-                            catch(IOException ex)
+                            catch (IOException ex)
                                     {
                                         JOptionPane.showMessageDialog(null, "Erro: não foi possível se conectar ao servidor.\nVerifique se o Servidor.java está em execução.", "Erro de Conexão", JOptionPane.ERROR_MESSAGE);
                                     }
                         }
                 });
 
-                // Listener para Editar Ponto.
                 editar.addActionListener(e -> {
-                    // Lista os pontos cadastrados no servidor.
                     ArrayList<PontoDeColeta> pontos = PontoDeColeta.listarPontos();
-
                     if  (pontos != null)
                         {
-                            frame.dispose(); // Fecha a tela de menu do admin.
-                            // Abre a tela de lista de pontos para seleção de edição.
+                            frame.dispose();
                             abrirListaParaEdicao(frame, pontos);
                         }
                 });
 
-                // Listener para Excluir Ponto.
                 excluir.addActionListener(e -> {
-                    // Lista os pontos cadastrados no servidor.
                     ArrayList<PontoDeColeta> pontos = PontoDeColeta.listarPontos();
-                    if (pontos != null)
+                    if  (pontos != null)
                         {
-                            frame.dispose(); // Fecha a tela de menu do admin.
-                            // Abre a tela de lista de pontos para seleção de exclusão.
+                            frame.dispose();
                             abrirListaParaExclusao(frame, pontos);
                         }
                 });
 
-                // Listener para Encerrar Programa.
-                encerrar.addActionListener(e -> System.exit(0)); // Encerra a JVM do cliente.
+                encerrar.addActionListener(e -> System.exit(0));
 
-                // Adiciona os componentes à interface, com espaçamento.
-                frame.add(Box.createRigidArea(new Dimension(0, 30)));
-                frame.add(titulo);
-                frame.add(Box.createRigidArea(new Dimension(0, 20)));
-                frame.add(listar);
-                frame.add(Box.createRigidArea(new Dimension(0, 10)));
-                frame.add(adicionar);
-                frame.add(Box.createRigidArea(new Dimension(0, 10)));
-                frame.add(editar);
-                frame.add(Box.createRigidArea(new Dimension(0, 10)));
-                frame.add(excluir);
-                frame.add(Box.createRigidArea(new Dimension(0, 10)));
-                frame.add(encerrar);
-                frame.add(Box.createRigidArea(new Dimension(0, 30)));
+                deslogar.addActionListener(e -> {
+                    frame.dispose();
+                    Menu.menuInicial();
+                });
 
+                // Monta painel central
+                panelCentro.add(Box.createRigidArea(new Dimension(0, 20)));
+                panelCentro.add(titulo);
+                panelCentro.add(Box.createRigidArea(new Dimension(0, 20)));
+                panelCentro.add(listar);
+                panelCentro.add(Box.createRigidArea(new Dimension(0, 10)));
+                panelCentro.add(adicionar);
+                panelCentro.add(Box.createRigidArea(new Dimension(0, 10)));
+                panelCentro.add(editar);
+                panelCentro.add(Box.createRigidArea(new Dimension(0, 10)));
+                panelCentro.add(excluir);
+
+                // Painel de rodapé (para o botão deslogar)
+                JPanel panelRodape = new JPanel();
+                panelRodape.setBackground(new Color(230, 240, 230));
+                panelRodape.add(deslogar);
+                panelRodape.add(encerrar);
+
+                // Adiciona nos lugares certos do BorderLayout
+                panelMain.add(panelCentro, BorderLayout.CENTER);
+                panelMain.add(panelRodape, BorderLayout.SOUTH);
+
+                frame.setContentPane(panelMain);
                 frame.setVisible(true);
             }
 
